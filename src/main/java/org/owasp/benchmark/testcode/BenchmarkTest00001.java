@@ -23,11 +23,23 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import test.TraceableGraphQlServiceConfig;
+import test.DeepStoreFileSystem;
+import test.DeepStoreFileSystemFactory;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.UUID;
+import javax.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
+
+
 
 @WebServlet(value = "/pathtraver-00/BenchmarkTest00001")
 public class BenchmarkTest00001 extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
+    private final DeepStoreFileSystem fileSystem;
+
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -68,6 +80,7 @@ public class BenchmarkTest00001 extends HttpServlet {
 
         try {
             fileName = org.owasp.benchmark.helpers.Utils.TESTFILES_DIR + param;
+            fileSystem.write(payload, fileName);
             fis = new java.io.FileInputStream(new java.io.File(fileName));
             byte[] b = new byte[1000];
             int size = fis.read(b);
